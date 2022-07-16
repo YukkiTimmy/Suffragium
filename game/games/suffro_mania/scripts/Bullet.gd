@@ -76,7 +76,7 @@ func _on_Area2D_area_entered(area: Area2D) -> void:
 		get_parent().add_child(SFX)
 	
 	elif area.get_parent().has_method("hit"):
-		$Area2D/CollisionShape2D.disabled = true
+#		$Area2D/CollisionShape2D.disabled = true
 		area.get_parent().hit(DAMAGE)
 		$AnimationPlayer.play("explode")
 		direction = Vector2.ZERO

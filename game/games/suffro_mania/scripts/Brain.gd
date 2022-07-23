@@ -46,7 +46,7 @@ const PROJECTILE = preload("res://games/suffro_mania/enemies/e_bullet.tscn")
 func _ready() -> void:
 	add_to_group("BOSS")
 	
-	hp = 1
+	hp = 25
 	DAMAGE = 3
 	SCORE = 10000
 	

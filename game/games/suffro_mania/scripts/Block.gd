@@ -17,13 +17,12 @@ const fall_delay_max = 60
 
 
 func _ready() -> void:
-	set_physics_process(false)
-	
 	hp = 5
 	SCORE = 125
 	DAMAGE = 2
 
-func _physics_process(delta):
+
+func _physics_process(_delta):
 	if hitstun > 0:
 		hitstun -= 1
 		visible = hitstun % 3
@@ -36,7 +35,7 @@ func _physics_process(delta):
 	
 	if not falling:
 	
-		var player_pos = get_parent().get_parent().get_player_pos()
+		var player_pos = GameManager._current_main_scene.get_player_pos()
 		var player_hor_dist = abs(player_pos.x - global_position.x)
 		
 		if player_hor_dist <= STOMP_DIST:
@@ -57,7 +56,7 @@ func _physics_process(delta):
 				var SFX = load("res://games/suffro_mania/SFX.tscn").instance()
 				SFX.play("stompE")
 				get_parent().add_child(SFX)
-				get_parent().get_parent().player.screen_shake(5)
+				GameManager._current_main_scene.player.screen_shake(5)
 				
 		else:
 			velocity.y -= GRAVITY

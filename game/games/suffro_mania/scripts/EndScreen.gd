@@ -1,16 +1,18 @@
 extends Control
 
 
+onready var credits = get_parent().get_node("Credits")
+
 func _ready() -> void:
 	visible = false
 	yield(get_tree().create_timer(1), "timeout")
 
 
-func _process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	if visible and not get_tree().paused:
 		get_tree().paused = true
 		
-		var root = get_parent().get_parent()
+		var root = GameManager._current_main_scene
 		
 		
 		root.calc_score()
@@ -18,8 +20,6 @@ func _process(delta: float) -> void:
 		$Score.text = str(root.score)
 		$Hp.text = str(root.healthScore)
 		$Time.text = str(root.timeScore)
-		
-		prints(root.score, root.healthScore, root.timeScore)
 		
 		$Total.text = str(root.finalScore)
 		
@@ -31,6 +31,6 @@ func _process(delta: float) -> void:
 		GameManager.restart_game()
 		
 	if Input.is_action_just_pressed("W") and visible:
-		get_parent().get_node("Credits").visible = !get_parent().get_node("Credits").visible
+		credits.visible = !credits.visible
 
 		

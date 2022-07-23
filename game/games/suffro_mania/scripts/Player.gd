@@ -6,7 +6,7 @@ const GRAVITY := 7
 const MAX_SPEED := 75
 const ACCELERATION := 20
 
-var JUMP_POWER := -190
+var JUMP_POWER := -190.0
 var FLOOR := Vector2(0,-1)
 
 
@@ -48,6 +48,7 @@ var shootSprites = preload("res://games/suffro_mania/assets/sprites/player-shoot
 
 var deathExplosion = preload("res://games/suffro_mania/Death_explosion.tscn")
 
+var parent = null
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -56,9 +57,11 @@ func _ready() -> void:
 	
 	yield(get_tree(), "idle_frame")
 	
+	parent = get_parent()
+	
 	for i in 100:
 		var projectile = PROJECTILE.instance()
-		get_parent().add_child(projectile)
+		parent.add_child(projectile)
 		projectiles.append(projectile)
 
 
@@ -122,7 +125,7 @@ func control_loop() -> void:
 	if Input.is_action_just_pressed("ui_accept") and is_on_floor():
 		var SFX = load("res://games/suffro_mania/SFX.tscn").instance()
 		SFX.play("jump")
-		get_parent().add_child(SFX)
+		parent.add_child(SFX)
 	
 	
 	
@@ -162,7 +165,7 @@ func control_loop() -> void:
 		
 		var SFX = load("res://games/suffro_mania/SFX.tscn").instance()
 		SFX.play("laserGun")
-		get_parent().add_child(SFX)
+		parent.add_child(SFX)
 		
 		
 		$Sprite.texture = shootSprites
@@ -209,7 +212,7 @@ func animation_loop() -> void:
 func damage_loop() -> void:
 	if hp <= 0:
 		var instance = deathExplosion.instance()
-		get_parent().add_child(instance)
+		parent.add_child(instance)
 		instance.position = global_position
 		state = STATES.DEAD
 		
@@ -217,7 +220,7 @@ func damage_loop() -> void:
 		
 		var SFX = load("res://games/suffro_mania/SFX.tscn").instance()
 		SFX.play("explode")
-		get_parent().add_child(SFX)
+		parent.add_child(SFX)
 		
 	if hitstun > 0:
 		hitstun -= 1
@@ -236,10 +239,10 @@ func damage_loop() -> void:
 			
 			var SFX = load("res://games/suffro_mania/SFX.tscn").instance()
 			SFX.play("damage")
-			get_parent().add_child(SFX)
+			parent.add_child(SFX)
 			
 			
-			get_parent().update_health()
+			parent.update_health()
 			
 			# Knockback
 			velocity.x += spritedir.x * MAX_SPEED * -1
@@ -251,10 +254,10 @@ func damage_loop() -> void:
 					
 			var SFX = load("res://games/suffro_mania/SFX.tscn").instance()
 			SFX.play("damage")
-			get_parent().add_child(SFX)
+			parent.add_child(SFX)
 			
 			
-			get_parent().update_health()
+			parent.update_health()
 			
 			# Knockback
 			velocity.x += spritedir.x * MAX_SPEED * -1
@@ -278,8 +281,13 @@ func _on_RoomDetector_area_entered(area: Area2D) -> void:
 		
 		
 		position += spritedir * 8
+		
+		area.visible = true
+		
 
-
+func _on_RoomDetector_area_exited(area: Area2D) -> void:
+	if area.is_in_group("ROOM"):
+		area.visible = false
 
 
 func screen_shake(strength) -> void:
@@ -290,3 +298,6 @@ func get_random_offset() -> Vector2:
 		rng.randf_range(-shake_strength, shake_strength),
 		rng.randf_range(-shake_strength, shake_strength)
 	)
+
+
+

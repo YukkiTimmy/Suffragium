@@ -18,13 +18,11 @@ const PROJECTILE = preload("res://games/suffro_mania/enemies/e_bullet.tscn")
 
 
 func _ready() -> void:
-	set_physics_process(false)
-	
 	hp = 2
 	SCORE = 150
 
 
-func _physics_process(delta):
+func _physics_process(_delta):
 	if hitstun > 0:
 		hitstun -= 1
 		visible = hitstun % 3
@@ -58,7 +56,7 @@ func _physics_process(delta):
 		velocity.x = SPEED * direction.x
 	
 	else:
-		var player_pos = get_parent().get_parent().get_player_pos()
+		var player_pos = GameManager._current_main_scene.get_player_pos()
 		var player_hor_dist = player_pos.x - global_position.x
 
 		if direction.x <= 0 and player_hor_dist > 0:
@@ -84,7 +82,7 @@ func shoot() -> void:
 	var instance = PROJECTILE.instance()
 	get_parent().add_child(instance)
 	instance.global_position = $Position2D.global_position
-	instance.set_projectile_direction(get_parent().get_parent().get_player_pos())
+	instance.set_projectile_direction(GameManager._current_main_scene.get_player_pos())
 	
 	
 	var SFX = load("res://games/suffro_mania/SFX.tscn").instance()

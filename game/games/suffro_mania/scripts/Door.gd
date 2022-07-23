@@ -5,6 +5,15 @@ var open := false
 export (bool) var onshot = false
 var blocked = false
 
+var parent = null
+
+
+
+func _ready() -> void:
+	yield(get_tree(), "idle_frame")
+	parent = get_parent()
+
+
 func _on_Opener_area_entered(area: Area2D) -> void:
 	if not blocked:
 		if area.get_parent().is_in_group("player_projectiles"):
@@ -14,15 +23,15 @@ func _on_Opener_area_entered(area: Area2D) -> void:
 			
 			var SFX = load("res://games/suffro_mania/SFX.tscn").instance()
 			SFX.play("open")
-			get_parent().add_child(SFX)
+			parent.add_child(SFX)
 			
 			SFX = load("res://games/suffro_mania/SFX.tscn").instance()
 			SFX.play("openBeep")
-			get_parent().add_child(SFX)
+			parent.add_child(SFX)
 	else:
 		var SFX = load("res://games/suffro_mania/SFX.tscn").instance()
 		SFX.play("bing")
-		get_parent().add_child(SFX)
+		parent.add_child(SFX)
 
 func _on_Timer_timeout() -> void:
 	var canClose = true
@@ -38,11 +47,11 @@ func _on_Timer_timeout() -> void:
 		
 		var SFX = load("res://games/suffro_mania/SFX.tscn").instance()
 		SFX.play("close")
-		get_parent().add_child(SFX)
+		parent.add_child(SFX)
 		
 		SFX = load("res://games/suffro_mania/SFX.tscn").instance()
 		SFX.play("closeBeep")
-		get_parent().add_child(SFX)
+		parent.add_child(SFX)
 		
 
 
@@ -54,11 +63,11 @@ func _on_oneshot_body_entered(body: Node) -> void:
 		
 		var SFX = load("res://games/suffro_mania/SFX.tscn").instance()
 		SFX.play("close")
-		get_parent().add_child(SFX)
+		parent.add_child(SFX)
 		
 		SFX = load("res://games/suffro_mania/SFX.tscn").instance()
 		SFX.play("closeBeep")
-		get_parent().add_child(SFX)
+		parent.add_child(SFX)
 		
-		get_parent().get_node("BackgroundMusic").stop()
+		GameManager._current_main_scene.get_node("BackgroundMusic").stop()
 		

@@ -39,6 +39,6 @@ func _on_Area2D_body_entered(body: Node) -> void:
 				if body.hp > body.max_hp:
 					body.hp = body.max_hp
 		
-				get_parent().get_parent().update_health()
+				GameManager._current_main_scene.update_health()
 				
 		queue_free()

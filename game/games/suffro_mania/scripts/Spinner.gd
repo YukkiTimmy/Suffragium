@@ -15,10 +15,10 @@ func _ready() -> void:
 	else:
 		$AnimationPlayer.play("spin_right")
 	
-	set_physics_process(false)
 	
 	hp = 2
 	SCORE = 100
+	
 
 
 func _physics_process(delta):

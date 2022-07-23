@@ -10,13 +10,11 @@ var velocity := Vector2.ZERO
 
 
 func _ready() -> void:
-	set_physics_process(false)
-	
 	hp = 3
 	SCORE = 100
 
 
-func _physics_process(delta):
+func _physics_process(_delta):
 	if hitstun > 0:
 		hitstun -= 1
 		visible = hitstun % 3

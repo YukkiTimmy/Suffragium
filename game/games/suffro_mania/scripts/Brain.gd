@@ -35,18 +35,25 @@ var t = 0
 
 var rng = RandomNumberGenerator.new()
 
+var yieldtimer = 0
+
+
+var root = null
+
 const PROJECTILE = preload("res://games/suffro_mania/enemies/e_bullet.tscn")
 
 
 func _ready() -> void:
-	set_physics_process(false)
-	
 	add_to_group("BOSS")
 	
-	hp = 20
+	hp = 1
 	DAMAGE = 3
 	SCORE = 10000
-
+	
+	yield(get_tree(), "idle_frame")
+	
+	root = GameManager._current_main_scene
+	
 
 func _physics_process(delta):
 	t += delta
@@ -103,7 +110,7 @@ func _physics_process(delta):
 
 			
 		STATES.CHASE:
-			var player_pos = get_parent().get_parent().get_player_pos()
+			var player_pos = root.get_player_pos()
 			var player_hor_dist = player_pos.x - global_position.x
 			
 			velocity.y = sin(t) * 10
@@ -137,7 +144,7 @@ func _physics_process(delta):
 		STATES.STOMP:
 			$AnimationPlayer.play("stomp")
 			
-			var player_pos = get_parent().get_parent().get_player_pos()
+			var player_pos = root.get_player_pos()
 			var player_hor_dist = player_pos.x - global_position.x
 			
 			if player_hor_dist <= 0 and direction == Vector2.RIGHT:
@@ -149,8 +156,10 @@ func _physics_process(delta):
 			
 			if player_hor_dist <= 10 and player_hor_dist >= -10:
 				velocity.y -= GRAVITY
+				
 				yield(get_tree().create_timer(0.05), "timeout")
 				falling = true
+				yieldtimer = 30
 			
 			
 			if falling:
@@ -163,12 +172,15 @@ func _physics_process(delta):
 						SFX.play("stompE")
 						get_parent().add_child(SFX)
 						
-						get_parent().get_parent().player.screen_shake(15)
+						root.player.screen_shake(15)
 						
 						reset = false
 					
 				else:
-					yield(get_tree().create_timer(0.5), "timeout")
+					if yieldtimer > 0:
+						yieldtimer -= 1
+						return
+						
 					velocity.y -= GRAVITY
 					
 					if global_position.y <= reset_y_pos:
@@ -187,7 +199,7 @@ func _physics_process(delta):
 			if position.y >= 270:
 				state = STATES.IDLE
 				velocity.y = 0
-				var music = get_parent().get_parent().get_node("BackgroundMusic")
+				var music = root.get_node("BackgroundMusic")
 				
 				music.stream = load("res://games/suffro_mania/assets/music/Boss Fight Bounce.mp3")
 				music.play()
@@ -204,12 +216,12 @@ func shoot() -> void:
 	var instance = PROJECTILE.instance()
 	get_parent().add_child(instance)
 	instance.global_position = $Position2D.global_position
-	instance.set_projectile_direction(get_parent().get_parent().get_player_pos())
+	instance.set_projectile_direction(root.get_player_pos())
 	
 	instance = PROJECTILE.instance()
 	get_parent().add_child(instance)
 	instance.global_position = $Position2D2.global_position
-	instance.set_projectile_direction(get_parent().get_parent().get_player_pos())
+	instance.set_projectile_direction(root.get_player_pos())
 	
 	var SFX = load("res://games/suffro_mania/SFX.tscn").instance()
 	SFX.play("shootE")
@@ -228,6 +240,6 @@ func _on_AnimationPlayer_animation_finished(anim_name: String) -> void:
 
 
 
-func _on_Shield_area_shape_entered(area_rid: RID, area: Area2D, area_shape_index: int, local_shape_index: int) -> void:
+func _on_Shield_area_shape_entered(_area_rid: RID, area: Area2D, _area_shape_index: int, _local_shape_index: int) -> void:
 	if area.is_in_group("player_projectiles"):
 		area.kill()

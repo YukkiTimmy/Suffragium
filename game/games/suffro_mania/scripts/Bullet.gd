@@ -50,7 +50,7 @@ func _on_AnimationPlayer_animation_finished(anim_name: String) -> void:
 		kill()
 
 
-func _on_VisibilityNotifier2D_viewport_exited(viewport: Viewport) -> void:
+func _on_VisibilityNotifier2D_viewport_exited(_viewport: Viewport) -> void:
 	kill()
 
 

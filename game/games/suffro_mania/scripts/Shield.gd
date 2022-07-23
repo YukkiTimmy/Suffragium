@@ -9,13 +9,12 @@ export (Vector2) var direction = Vector2.LEFT
 var velocity := Vector2.ZERO
 
 func _ready() -> void:
-	set_physics_process(false)
-	
 	hp = 3
 	SCORE = 200
 	DAMAGE = 3
 
-func _physics_process(delta):
+
+func _physics_process(_delta):
 	if hitstun > 0:
 		hitstun -= 1
 		visible = hitstun % 3
@@ -45,6 +44,6 @@ func _physics_process(delta):
 	velocity = move_and_slide_with_snap(velocity, Vector2(0,1), FLOOR)
 
 
-func _on_Shield_area_shape_entered(area_rid: RID, area: Area2D, area_shape_index: int, local_shape_index: int) -> void:
+func _on_Shield_area_shape_entered(_area_rid: RID, area: Area2D, _area_shape_index: int, _local_shape_index: int) -> void:
 	if area.is_in_group("player_projectiles"):
 		area.kill()

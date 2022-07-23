@@ -15,7 +15,7 @@ func _ready() -> void:
 	get_parent().add_child(SFX)
 
 
-func _process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	if get_child_count() <= 0:
 		queue_free()
 	

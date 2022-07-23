@@ -13,10 +13,10 @@ onready var label = $Label
 func _ready() -> void:
 	label.text = str(score)
 	if typeof(score) == TYPE_INT:
-		get_parent().get_parent().score += score
+		GameManager._current_main_scene.score += score
 	
 
-func _process(delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	t += 1
 	position.y -= SPEED * delta
 	position.x = sin(t * 0.1) * 3

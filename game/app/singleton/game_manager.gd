@@ -9,6 +9,7 @@ var _games_folder_path = "res://games"
 var _games = {}
 
 var _current_game = null
+var _current_main_scene = null
 var _current_game_config = null
 var _current_game_start_time = null
 var _pause_menu = null
@@ -155,6 +156,7 @@ func _change_scene(scene_path: String):
 	if err:
 		push_error("Could not change scene to '%s' (Code: %s)" % [scene_path, err])
 		return err
+
 	return OK
 
 

@@ -7,8 +7,8 @@ var velocity := Vector2.ZERO
 
 var rng = RandomNumberGenerator.new()
 
-var age := 0
-var maxage := 0
+var age := 0.0
+var maxage := 0.0
 
 const COLORS = ["#FFF200", "#FF7F27", "#880015", "#340e36", "#444444"]
 
@@ -25,7 +25,7 @@ func _ready() -> void:
 	maxage = rng.randi_range(15,30)
 
 
-func _process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	if age > 10:
 		modulate = COLORS[0]
 	if age > 12:

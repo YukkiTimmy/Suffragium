@@ -22,7 +22,7 @@ func set_projectile_direction(dir):
 	
 
 	
-func _physics_process(delta):	
+func _physics_process(delta):
 	position += vector * delta * SPEED
 
 
@@ -30,7 +30,7 @@ func _physics_process(delta):
 func _on_Area2D_body_entered(body: Node) -> void:
 	if body.name == "TileMap":
 		$AnimationPlayer.play("explode")
-		direction = Vector2.ZERO
+		vector = Vector2.ZERO
 	
 
 
@@ -40,7 +40,7 @@ func _on_AnimationPlayer_animation_finished(anim_name: String) -> void:
 		kill()
 
 
-func _on_VisibilityNotifier2D_viewport_exited(viewport: Viewport) -> void:
+func _on_VisibilityNotifier2D_viewport_exited(_viewport: Viewport) -> void:
 	kill()
 
 
@@ -55,8 +55,9 @@ func kill() -> void:
 
 func _on_Area2D_area_entered(area: Area2D) -> void:
 	if area.is_in_group("PLAYER"):
-		$Area2D/CollisionShape2D.disabled = true
+#		$Area2D/CollisionShape2D.disabled = true
+		$Area2D/CollisionShape2D.area.set_deferred("disabled", true)
 		area.hp -= DAMAGE
 		area.get_parent().hitstun = area.get_parent().hitstun_max
 		$AnimationPlayer.play("explode")
-		direction = Vector2.ZERO
+		vector = Vector2.ZERO
